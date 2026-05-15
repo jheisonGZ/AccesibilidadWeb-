@@ -108,7 +108,7 @@ export default function Login() {
         className={`login-bg-video ${cinematic ? "video-animate" : ""}`}
         muted
         playsInline
-        preload="none"
+        preload="auto"
       />
 
       <div className={`login-bg-overlay ${cinematic ? "overlay-dark" : ""}`} />
