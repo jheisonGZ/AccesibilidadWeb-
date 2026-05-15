@@ -28,7 +28,7 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  z-index: -1;  /* Detrás del overlay */
+  z-index: -1;
 }
 
 /* ===== VIDEO ===== */
@@ -180,6 +180,11 @@ body {
   .login-page {
     padding: 20px;
   }
+  
+  /* Ajuste de imagen para tablet */
+  .login-page::before {
+    background-position: 50% 40%;
+  }
 }
 
 /* ===================================================
@@ -188,6 +193,12 @@ body {
 @media (max-width: 480px) {
   .login-page {
     padding: 16px;
+  }
+  
+  /* Ajuste de imagen para móvil - punto focal optimizado */
+  .login-page::before {
+    background-position: 50% 35%;
+    background-size: cover;
   }
 
   .wrapper {
@@ -218,8 +229,7 @@ body {
     transform: scale(1.15);
   }
 
-  /* En móvil, OPCIONAL: ocultar video y usar solo imagen */
-  /* Descomenta las siguientes líneas si quieres ocultar el video en móvil */
+  /* OPCIONAL: Oculta el video en móvil (descomenta si quieres ahorrar datos) */
   /*
   .login-bg-video {
     display: none;
@@ -252,7 +262,50 @@ body {
 }
 
 /* ===================================================
-   RESPONSIVE — MÓVIL PEQUEÑO (≤ 360px)
+   MÓVIL EN HORIZONTAL (landscape)
+   =================================================== */
+@media (max-width: 896px) and (orientation: landscape) {
+  .login-page {
+    padding: 12px;
+  }
+  
+  .login-page::before {
+    background-position: center;
+    background-size: cover;
+  }
+  
+  .wrapper {
+    width: min(350px, 90%);
+    padding: 16px 20px;
+  }
+  
+  .wrapper h1 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .input-box {
+    margin: 8px 0;
+  }
+  
+  .btn {
+    margin-top: 8px;
+    padding: 10px;
+  }
+}
+
+/* ===================================================
+   PANTALLAS MUY ALTAS (21:9 como Sony Xperia)
+   =================================================== */
+@media (max-width: 480px) and (min-aspect-ratio: 20/9) {
+  .login-page::before {
+    background-size: auto 100%;
+    background-position: center;
+  }
+}
+
+/* ===================================================
+   MÓVIL PEQUEÑO (≤ 360px)
    Galaxy S, iPhone SE
    =================================================== */
 @media (max-width: 360px) {
@@ -267,5 +320,9 @@ body {
 
   .btn {
     font-size: 14px;
+  }
+  
+  .login-page::before {
+    background-position: 50% 30%;
   }
 }

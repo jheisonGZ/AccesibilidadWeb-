@@ -36,7 +36,7 @@ const AVATARS = [
     gender: "Masculino",
     desc:   "Estudiante activo y curioso.",
     color:  "#93c5fd",
-    model:  "/models/hombre 2.glb",
+    model:  "/models/hombre2.glb",
   },
   {
     id:     "female-1",
@@ -44,7 +44,7 @@ const AVATARS = [
     gender: "Femenino",
     desc:   "Creativa, empatica y decidida.",
     color:  "#f9a8d4",
-    model:  "/models/mujer 2.glb",
+    model:  "/models/mujer2.glb",
   },
   {
     id:     "male-2",

@@ -9,12 +9,22 @@ import { db } from "../services/firebase";
 
 export default function Dashboard() {
   const { alias, user } = useAuth();
-
   const [questionnaireCompleted, setQuestionnaireCompleted] = useState(false);
   const [avatarSelected, setAvatarSelected] = useState(false);
   const [loadingState, setLoadingState] = useState(true);
+  const [backgroundLoaded, setBackgroundLoaded] = useState(false); // ← Nuevo
 
-  // ── Leer estado real del usuario desde Firestore ─────────────────────────
+  // Precargar la imagen de fondo
+  useEffect(() => {
+    const img = new Image();
+    img.src = "/images/dashboard.webp";
+    img.onload = () => {
+      setBackgroundLoaded(true);
+      document.querySelector('.dashboard-page')?.classList.add('loaded');
+    };
+  }, []);
+
+  // Leer estado real del usuario desde Firestore
   useEffect(() => {
     if (!user) return;
     const fetchState = async () => {
@@ -22,8 +32,8 @@ export default function Dashboard() {
         const snap = await getDoc(doc(db, "users", user.uid));
         if (snap.exists()) {
           const data = snap.data();
-          setQuestionnaireCompleted(!!data.lastEmotion); // guardado en Questionnaire.jsx
-          setAvatarSelected(!!data.avatar);             // guardado en AvatarSelect.jsx
+          setQuestionnaireCompleted(!!data.lastEmotion);
+          setAvatarSelected(!!data.avatar);
         }
       } catch (e) {
         console.error("Error leyendo estado del usuario:", e);
@@ -34,6 +44,28 @@ export default function Dashboard() {
     fetchState();
   }, [user]);
 
+  // Mostrar skeleton mientras carga la imagen
+  if (!backgroundLoaded || loadingState) {
+    return (
+      <div className="dashboard-page">
+        <div className="dashboard-loading"></div>
+        <div className="dashboard-container" style={{ 
+          display: "flex", 
+          alignItems: "center", 
+          justifyContent: "center", 
+          minHeight: "60vh",
+          position: "relative",
+          zIndex: 1
+        }}>
+          <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "16px" }}>
+            Cargando tu espacio...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // El resto de tu componente Dashboard sigue igual...
   const showQuestionnaireReminder = () => {
     Swal.fire({
       icon: "warning",
@@ -75,22 +107,11 @@ export default function Dashboard() {
 
   const initial = alias?.charAt(0).toUpperCase();
 
-  // Pequeño loader mientras se consulta Firestore
-  if (loadingState) {
-    return (
-      <div className="dashboard-page">
-        <div className="dashboard-container" style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "60vh" }}>
-          <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "14px" }}>Cargando tu espacio...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="dashboard-page">
       <div className="dashboard-container">
 
-        {/* ── BIENVENIDA ── */}
+        {/* BIENVENIDA */}
         <div className="dashboard-welcome">
           <div className="dashboard-avatar">
             {user?.photoURL
@@ -104,7 +125,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* ── TÍTULO ── */}
+        {/* TÍTULO */}
         <div className="dashboard-header-text">
           <h1 className="dashboard-title">Tu espacio de bienestar emocional</h1>
           <p className="dashboard-subtitle">
@@ -112,20 +133,19 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* ── TARJETAS ── */}
+        {/* TARJETAS */}
         <div className="dashboard-grid">
 
-          {/* 1. Cuestionario — siempre habilitado */}
+          {/* 1. Cuestionario */}
           <Link to="/home/questionnaire" className="dashboard-card">
             <ClipboardList size={28} />
             <h3>{questionnaireCompleted ? "Repetir cuestionario" : "Hacer cuestionario"}</h3>
             <p>{questionnaireCompleted ? "Vuelve a hacer el test" : "Completa el test de accesibilidad"}</p>
           </Link>
 
-          {/* 2. Avatar — habilitado solo si completó el cuestionario */}
+          {/* 2. Avatar */}
           {questionnaireCompleted ? (
             avatarSelected ? (
-              // Ya tiene avatar → preguntar si quiere cambiar
               <div
                 className="dashboard-card"
                 onClick={async () => {
@@ -139,7 +159,6 @@ export default function Dashboard() {
                 <p>¿Quieres elegir otro?</p>
               </div>
             ) : (
-              // Completó cuestionario pero sin avatar aún
               <Link to="/home/avatar" className="dashboard-card">
                 <User size={28} />
                 <h3>Elegir avatar</h3>
@@ -147,7 +166,6 @@ export default function Dashboard() {
               </Link>
             )
           ) : (
-            // Sin cuestionario → bloqueado
             <div className="dashboard-card disabled" onClick={showQuestionnaireReminder}>
               <User size={28} />
               <h3>Elegir avatar</h3>
@@ -155,7 +173,7 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* 3. Escenario 3D — habilitado solo si tiene avatar */}
+          {/* 3. Escenario 3D */}
           {avatarSelected ? (
             <Link to="/home/scene" className="dashboard-card">
               <Globe size={28} />
@@ -170,7 +188,7 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* 4. Progreso — siempre habilitado */}
+          {/* 4. Progreso */}
           <Link to="/home/progress" className="dashboard-card">
             <BarChart3 size={28} />
             <h3>Ver progreso</h3>
