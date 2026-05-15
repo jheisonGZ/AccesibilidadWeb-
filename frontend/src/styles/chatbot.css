@@ -3,23 +3,26 @@
 /* ── Wrapper principal ── */
 .chatbot-wrapper {
   position: fixed;
-  bottom: 16px;
+  bottom: -70px;
   right: 16px;
   z-index: 1000;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  justify-content: flex-end;
   gap: 8px;
   pointer-events: all;
+  max-height: calc(100vh - 32px);
 }
 
-/* ── Canvas 3D — agrandado para que Taison sea visible ── */
+/* ── Canvas 3D ── */
 .chatbot-canvas {
   width: 180px;
   height: 180px;
   cursor: pointer;
   pointer-events: all;
   filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.5));
+  flex-shrink: 0;
 }
 
 /* ── Tooltip ── */
@@ -40,6 +43,7 @@
   opacity: 0;
   transform: translateY(8px);
   transition: border-color 0.2s;
+  flex-shrink: 0;
 }
 .chatbot-tooltip:hover {
   border-color: rgba(126, 207, 255, 0.35);
@@ -64,6 +68,7 @@
   opacity: 0;
   transform: translateY(20px) scale(0.96);
   transform-origin: bottom right;
+  flex-shrink: 1;
 }
 
 /* ── Header ── */
@@ -76,13 +81,11 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   flex-shrink: 0;
 }
-
 .chatbot-header-left {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-
 .chatbot-online-dot {
   width: 9px;
   height: 9px;
@@ -90,7 +93,6 @@
   flex-shrink: 0;
   transition: background 0.3s;
 }
-
 .chatbot-title {
   font-size: 14px;
   font-weight: 700;
@@ -98,14 +100,12 @@
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   letter-spacing: 0.3px;
 }
-
 .chatbot-subtitle {
   font-size: 10px;
   color: rgba(255, 255, 255, 0.45);
   margin-top: 2px;
   letter-spacing: 0.2px;
 }
-
 .chatbot-close {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -142,11 +142,9 @@
   background: rgba(126, 207, 255, 0.15);
   border-radius: 2px;
 }
-
 .chatbot-msg-row { display: flex; }
 .chatbot-msg-row.user { justify-content: flex-end; }
 .chatbot-msg-row.bot  { justify-content: flex-start; }
-
 .chatbot-bubble {
   max-width: 82%;
   font-size: 12.5px;
@@ -155,7 +153,6 @@
   opacity: 0;
   transform: translateY(6px);
 }
-
 .chatbot-bubble.bot {
   background: rgba(255, 255, 255, 0.07);
   backdrop-filter: blur(8px);
@@ -165,7 +162,6 @@
   border-radius: 4px 14px 14px 14px;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
-
 .chatbot-bubble.user {
   background: rgba(126, 207, 255, 0.18);
   backdrop-filter: blur(8px);
@@ -210,7 +206,6 @@
   flex-shrink: 0;
   background: rgba(255, 255, 255, 0.03);
 }
-
 .chatbot-input {
   flex: 1;
   background: rgba(255, 255, 255, 0.07);
@@ -231,7 +226,6 @@
 }
 .chatbot-input::placeholder { color: rgba(255, 255, 255, 0.25); }
 .chatbot-input:disabled { opacity: 0.4; cursor: not-allowed; }
-
 .chatbot-send {
   border: 1px solid rgba(126, 207, 255, 0.25);
   border-radius: 12px;
@@ -256,65 +250,77 @@
 .chatbot-send:disabled { opacity: 0.3; cursor: not-allowed; }
 
 /* =============================================================================
-   RESPONSIVE — Movil
+   RESPONSIVE MÓVIL (max-width: 480px)
+   Mismo diseño glass, todo más compacto, perro más pequeño
 ============================================================================= */
-@media (max-width: 640px) {
+@media (max-width: 480px) {
+
+  /* Wrapper: sube un poco para que no tape la barra de navegación del móvil */
   .chatbot-wrapper {
-    bottom: 0;
-    right: 0;
-    left: 0;
-    top: 0;
-    gap: 0;
-    justify-content: flex-end;
-    pointer-events: none;
+    bottom: -50px;
+    right: 8px;
+    max-height: calc(100vh - 16px);
   }
 
+  /* Perro más pequeño en móvil */
+  .chatbot-canvas {
+    width: 120px;
+    height: 120px;
+  }
+
+  /* Tooltip igual de elegante, solo un poco más pequeño */
+  .chatbot-tooltip {
+    font-size: 10.5px;
+    padding: 5px 12px;
+    border-radius: 16px;
+  }
+
+  /* Panel ocupa casi todo el ancho pero conserva el glass y los bordes */
   .chatbot-panel {
-    width: 100%;
-    height: 100%;
-    border-radius: 0;
-    border: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-    pointer-events: all;
+    width: calc(100vw - 24px);  /* ancho de pantalla menos margen */
+    height: 400px;
+    border-radius: 16px;        /* bordes redondeados conservados */
   }
 
   .chatbot-header {
-    padding: 16px 18px;
-    padding-top: calc(16px + env(safe-area-inset-top));
+    padding: 12px 14px;
   }
 
-  .chatbot-title  { font-size: 15px; }
-  .chatbot-subtitle { font-size: 11px; }
-  .chatbot-close  { width: 32px; height: 32px; }
-  .chatbot-messages { padding: 16px 18px; gap: 12px; }
+  .chatbot-title   { font-size: 13px; }
+  .chatbot-subtitle { font-size: 9.5px; }
+  .chatbot-close   { width: 24px; height: 24px; font-size: 11px; }
+
+  .chatbot-messages {
+    padding: 12px 14px;
+    gap: 8px;
+  }
 
   .chatbot-bubble {
-    font-size: 13.5px;
-    padding: 10px 14px;
+    font-size: 12px;
+    padding: 8px 11px;
     max-width: 88%;
   }
 
   .chatbot-input-row {
-    padding: 12px 16px;
-    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    padding: 10px 12px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
   }
 
-  .chatbot-input  { font-size: 14px; padding: 10px 14px; border-radius: 14px; }
-  .chatbot-send   { width: 42px; height: 42px; border-radius: 14px; font-size: 16px; }
-  .chatbot-canvas { display: none; }
+  .chatbot-input {
+    font-size: 13px;
+    padding: 8px 11px;
+  }
 
-  .chatbot-tooltip {
-    position: fixed;
-    bottom: calc(16px + env(safe-area-inset-bottom));
-    right: 16px;
-    pointer-events: all;
-    font-size: 12px;
-    padding: 8px 16px;
-    border-radius: 24px;
+  .chatbot-send {
+    width: 34px;
+    height: 34px;
+    font-size: 13px;
   }
 }
 
-/* Tablet */
+/* =============================================================================
+   TABLET (641px - 1024px)
+============================================================================= */
 @media (min-width: 641px) and (max-width: 1024px) {
   .chatbot-panel  { width: 300px; height: 440px; }
   .chatbot-canvas { width: 150px; height: 150px; }
