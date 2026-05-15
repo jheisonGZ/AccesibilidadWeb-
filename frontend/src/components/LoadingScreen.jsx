@@ -13,7 +13,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useEffect, useState } from "react";
-import loadingBg from "../assets/images/loading.webp";
+const loadingBg = "/images/loading.webp";
 
 export default function LoadingScreen({ message = "Cargando" }) {
 
