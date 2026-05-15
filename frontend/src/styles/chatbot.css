@@ -62,6 +62,9 @@
   flex-direction: column;
   overflow: hidden;
   pointer-events: all;
+  /* ── FIX producción: activa contexto de composición para backdrop-filter ── */
+  isolation: isolate;
+  will-change: transform, opacity;
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.4),
     0 0 0 1px rgba(255, 255, 255, 0.04) inset;
@@ -251,71 +254,36 @@
 
 /* =============================================================================
    RESPONSIVE MÓVIL (max-width: 480px)
-   Mismo diseño glass, todo más compacto, perro más pequeño
 ============================================================================= */
 @media (max-width: 480px) {
-
-  /* Wrapper: sube un poco para que no tape la barra de navegación del móvil */
   .chatbot-wrapper {
     bottom: -50px;
     right: 8px;
     max-height: calc(100vh - 16px);
   }
-
-  /* Perro más pequeño en móvil */
   .chatbot-canvas {
     width: 120px;
     height: 120px;
   }
-
-  /* Tooltip igual de elegante, solo un poco más pequeño */
   .chatbot-tooltip {
     font-size: 10.5px;
     padding: 5px 12px;
     border-radius: 16px;
   }
-
-  /* Panel ocupa casi todo el ancho pero conserva el glass y los bordes */
   .chatbot-panel {
-    width: calc(100vw - 24px);  /* ancho de pantalla menos margen */
+    width: calc(100vw - 24px);
     height: 400px;
-    border-radius: 16px;        /* bordes redondeados conservados */
+    border-radius: 16px;
   }
-
-  .chatbot-header {
-    padding: 12px 14px;
-  }
-
-  .chatbot-title   { font-size: 13px; }
-  .chatbot-subtitle { font-size: 9.5px; }
-  .chatbot-close   { width: 24px; height: 24px; font-size: 11px; }
-
-  .chatbot-messages {
-    padding: 12px 14px;
-    gap: 8px;
-  }
-
-  .chatbot-bubble {
-    font-size: 12px;
-    padding: 8px 11px;
-    max-width: 88%;
-  }
-
-  .chatbot-input-row {
-    padding: 10px 12px;
-    padding-bottom: calc(10px + env(safe-area-inset-bottom));
-  }
-
-  .chatbot-input {
-    font-size: 13px;
-    padding: 8px 11px;
-  }
-
-  .chatbot-send {
-    width: 34px;
-    height: 34px;
-    font-size: 13px;
-  }
+  .chatbot-header        { padding: 12px 14px; }
+  .chatbot-title         { font-size: 13px; }
+  .chatbot-subtitle      { font-size: 9.5px; }
+  .chatbot-close         { width: 24px; height: 24px; font-size: 11px; }
+  .chatbot-messages      { padding: 12px 14px; gap: 8px; }
+  .chatbot-bubble        { font-size: 12px; padding: 8px 11px; max-width: 88%; }
+  .chatbot-input-row     { padding: 10px 12px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
+  .chatbot-input         { font-size: 13px; padding: 8px 11px; }
+  .chatbot-send          { width: 34px; height: 34px; font-size: 13px; }
 }
 
 /* =============================================================================

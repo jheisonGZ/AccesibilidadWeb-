@@ -4,7 +4,9 @@ const Groq = require('groq-sdk');
 require('dotenv').config();
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:5173' }));
+
+// CORS permitiendo todas las origins (cámbialo después si quieres restringir)
+app.use(cors());
 app.use(express.json());
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
@@ -28,5 +30,6 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-app.listen(3001, () => console.log('Backend con Groq en http://localhost:3001'));
-
+// Puerto dinámico para Render (y local también)
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`Backend con Groq corriendo en puerto ${PORT}`));
