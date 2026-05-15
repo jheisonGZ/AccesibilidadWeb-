@@ -1,0 +1,309 @@
+/* ════════════════════════════════
+   PÁGINA
+   ════════════════════════════════ */
+.av-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px 48px;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+  color: white;
+}
+
+.av-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/src/assets/images/clasi.webp");
+  background-size: cover;
+  background-position: center;
+  filter: blur(7px) brightness(0.35);
+  transform: scale(1.06);
+  z-index: 0;
+}
+
+.av-page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(5,15,25,0.75) 0%, rgba(15,32,47,0.6) 100%);
+  z-index: 1;
+}
+
+.av-container {
+  width: 100%;
+  max-width: 900px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+/* ════════════════════════════════
+   ENCABEZADO
+   ════════════════════════════════ */
+.av-header { text-align: center; }
+
+.av-title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+  background: linear-gradient(90deg, #7ecfff, #c084fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.av-subtitle {
+  font-size: 0.95rem;
+  opacity: 0.6;
+  max-width: 420px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* ════════════════════════════════
+   FILTROS
+   ════════════════════════════════ */
+.av-filters {
+  display: flex;
+  gap: 10px;
+}
+
+.av-filter-btn {
+  padding: 7px 20px;
+  border-radius: 99px;
+  border: 1.5px solid rgba(255,255,255,0.18);
+  background: transparent;
+  color: rgba(255,255,255,0.55);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.av-filter-btn:hover {
+  border-color: rgba(255,255,255,0.4);
+  color: #fff;
+}
+
+.av-filter-btn.active {
+  background: rgba(126,207,255,0.18);
+  border-color: #7ecfff;
+  color: #7ecfff;
+}
+
+/* ════════════════════════════════
+   GRID DE TARJETAS
+   ════════════════════════════════ */
+.av-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+/* ════════════════════════════════
+   TARJETA DE AVATAR
+   ════════════════════════════════ */
+.av-card {
+  background: rgba(255,255,255,0.07);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.av-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(255,255,255,0.25);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+}
+
+.av-card.selected {
+  border-color: var(--av-accent, #7ecfff);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--av-accent, #7ecfff) 20%, transparent),
+    0 16px 40px rgba(0,0,0,0.35);
+  transform: translateY(-6px);
+}
+
+/* check de selección */
+.av-check {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--av-accent, #7ecfff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0d1b2a;
+  z-index: 10;
+  animation: popIn 0.2s cubic-bezier(.34,1.56,.64,1) both;
+}
+
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* ════════════════════════════════
+   CANVAS 3D
+   ════════════════════════════════ */
+.av-canvas-wrap {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+
+/* el canvas de Three.js */
+.av-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.av-canvas canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* placeholder mientras carga el GLB */
+.av-canvas-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgba(0,0,0,0.25);
+  border-bottom: 2px solid;
+  border-color: inherit;
+}
+
+/* punto animado de carga */
+.av-loading-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.4);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50%       { opacity: 1;   transform: scale(1.2); }
+}
+
+/* ════════════════════════════════
+   INFO DEBAJO DEL CANVAS
+   ════════════════════════════════ */
+.av-info {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+}
+
+.av-gender-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--av-accent, #7ecfff);
+  opacity: 0.85;
+}
+
+.av-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.av-desc {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* ════════════════════════════════
+   BOTÓN CONTINUAR
+   ════════════════════════════════ */
+.av-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 36px;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: 'Segoe UI', sans-serif;
+  min-width: 280px;
+  justify-content: center;
+}
+
+/* estado: sin selección */
+.av-btn:disabled:not([data-loading]) {
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.3);
+  cursor: not-allowed;
+}
+
+/* estado: con selección */
+.av-btn:not(:disabled) {
+  background: rgba(126,207,255,0.15);
+  border: 1.5px solid rgba(126,207,255,0.4);
+  color: #fff;
+}
+
+.av-btn:not(:disabled):hover {
+  background: rgba(126,207,255,0.25);
+  border-color: #7ecfff;
+  box-shadow: 0 8px 28px rgba(126,207,255,0.25);
+  transform: translateY(-2px);
+}
+
+/* estado: guardando */
+.av-btn:disabled[data-loading] {
+  background: rgba(126,207,255,0.1);
+  border: 1.5px solid rgba(126,207,255,0.2);
+  color: rgba(255,255,255,0.5);
+  cursor: not-allowed;
+}
+
+/* ════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════ */
+@media (max-width: 768px) {
+  .av-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .av-grid         { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .av-canvas-wrap  { height: 160px; }
+  .av-title        { font-size: 1.5rem; }
+}

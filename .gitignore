@@ -1,0 +1,40 @@
+# Dependencias
+backend/node_modules/
+frontend/node_modules/
+node_modules/
+
+# Archivos de bloqueo
+package-lock.json
+backend/package-lock.json
+frontend/package-lock.json
+yarn.lock
+
+# Variables de entorno
+.env
+.env.local
+backend/.env
+frontend/.env
+
+# Logs
+*.log
+logs/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Directorios de compilación
+backend/dist/
+frontend/dist/
+backend/build/
+frontend/build/
+dist/
+build/
+
+# Archivos temporales
+*.tmp
+temp/
