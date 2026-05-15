@@ -19,6 +19,18 @@ body {
   position: relative;
 }
 
+/* ===== IMAGEN DE RESPALDO (para móvil y mientras carga video) ===== */
+.login-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/login.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;  /* Detrás del overlay */
+}
+
 /* ===== VIDEO ===== */
 
 .login-bg-video {
@@ -161,17 +173,7 @@ body {
   opacity: 0.8;
 }
 
-@media (max-width: 480px) {
-  .wrapper {
-    padding: 20px;
-    border-radius: 14px;
-  }
-
-  .wrapper h1 {
-    font-size: 22px;
-  }
-
-  /* ===================================================
+/* ===================================================
    RESPONSIVE — TABLET (481px – 768px)
    =================================================== */
 @media (max-width: 768px) {
@@ -216,6 +218,14 @@ body {
     transform: scale(1.15);
   }
 
+  /* En móvil, OPCIONAL: ocultar video y usar solo imagen */
+  /* Descomenta las siguientes líneas si quieres ocultar el video en móvil */
+  /*
+  .login-bg-video {
+    display: none;
+  }
+  */
+
   /* Zoom cinematográfico compensa el scale base */
   .login-bg-video.video-animate {
     transform: scale(1.3);
@@ -258,5 +268,4 @@ body {
   .btn {
     font-size: 14px;
   }
-}
 }
