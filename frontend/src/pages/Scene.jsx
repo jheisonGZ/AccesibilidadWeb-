@@ -12,9 +12,23 @@ import StressRoom  from "../scenes/StressRoom";
 import NeutralRoom from "../scenes/NeutralRoom";
 import { usePageReady } from "../providers/NavigationContext";
 import { useAuth } from "../providers/AuthProvider";
-import { LayoutDashboard, LogOut, Heart, AlertTriangle, AlertCircle, Activity, TrendingUp, TrendingDown, Minus, Star, Zap } from "lucide-react";
+import {
+  LayoutDashboard,
+  LogOut,
+  Heart,
+  AlertTriangle,
+  AlertCircle,
+  Activity,
+  TrendingUp,
+  TrendingDown,
+  Minus,
+  Star,
+  Zap,
+  CircleHelp
+} from "lucide-react";
 import Swal from "sweetalert2";
 import "../styles/scene.css";
+import HelpModal from "../components/HelpModal";
 
 // ── Mapas de datos ────────────────────────────────────────────────────────────
 const EMOTION_MAP = {
@@ -44,6 +58,7 @@ export default function Scene() {
   const [lastScore, setLastScore] = useState(null);
   const [totalSess, setTotalSess] = useState(0);
   const [tick,      setTick]      = useState(0);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   usePageReady();
 
@@ -108,6 +123,7 @@ export default function Scene() {
     }
   };
 
+  
   if (loading) return <div style={{ background: "#080e08", height: "100vh" }} />;
 
   const SceneComponent =
@@ -194,20 +210,45 @@ export default function Scene() {
         </div>
 
         <div className="hud-actions">
-          <button className="hud-btn hud-btn-primary" onClick={() => navigate("/home")}>
-            <LayoutDashboard size={13} strokeWidth={2} />
-            BASE
-          </button>
-          <button className="hud-btn hud-btn-danger" onClick={handleLogout}>
-            <LogOut size={13} strokeWidth={2} />
-            SALIR
-          </button>
-        </div>
+  <button
+    className="hud-btn hud-btn-primary"
+    onClick={() => navigate("/home")}
+  >
+    <LayoutDashboard size={13} strokeWidth={2} />
+    BASE
+  </button>
+
+  <button
+    className="hud-btn"
+    onClick={() => setIsHelpOpen(true)}    
+    title="Centro de ayuda"
+    style={{
+      border: "1px solid #4b5563",
+      background: "#1f2937",
+      color: "#d1d5db"
+    }}
+  >
+    <CircleHelp size={13} strokeWidth={2} />
+  </button>
+
+  <button
+    className="hud-btn hud-btn-danger"
+    onClick={handleLogout}
+  >
+    <LogOut size={13} strokeWidth={2} />
+    SALIR
+  </button>
+</div>
 
       </div>
 
-      {/* ── ESCENA 3D ── */}
+            {/* ── ESCENA 3D ── */}
       <SceneComponent emotion={emotion} />
+     
+      <HelpModal
+  isOpen={isHelpOpen}
+  onClose={() => setIsHelpOpen(false)}
+/>
 
     </div>
   );

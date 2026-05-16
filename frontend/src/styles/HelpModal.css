@@ -1,0 +1,281 @@
+/* src/styles/HelpModal.css */
+
+/* ══════════════════════════════════════════════════════
+   OVERLAY
+══════════════════════════════════════════════════════ */
+.help-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(5, 10, 20, 0.45);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+/* ══════════════════════════════════════════════════════
+   MODAL — glass consistente con el resto de la app
+══════════════════════════════════════════════════════ */
+.help-modal-content {
+  position: relative;
+  width: min(680px, 100%);   /* compacto por defecto */
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 24px 72px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(0, 234, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  color: #e5e7eb;
+  font-family: 'Segoe UI', system-ui, Arial, sans-serif;
+  isolation: isolate;
+  will-change: transform, opacity;
+}
+
+/* Variante compacta (la que usa el JSX) */
+.help-modal-content--compact {
+  width: min(680px, 100%);
+}
+
+/* Variante ancha */
+.help-modal-content--wide {
+  width: min(1160px, 100%);
+}
+
+/* ══════════════════════════════════════════════════════
+   BOTÓN CERRAR
+══════════════════════════════════════════════════════ */
+.help-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+}
+.help-modal-close:hover {
+  background: rgba(126, 207, 255, 0.15);
+  border-color: rgba(126, 207, 255, 0.35);
+  color: #7ecfff;
+  text-shadow: 0 0 12px rgba(126, 207, 255, 0.4);
+  transform: scale(1.08);
+}
+
+/* ══════════════════════════════════════════════════════
+   SCROLL INTERNO
+══════════════════════════════════════════════════════ */
+.help-modal-scroll {
+  overflow-y: auto;
+  padding: 40px 36px 20px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(126, 207, 255, 0.18) transparent;
+}
+.help-modal-scroll::-webkit-scrollbar       { width: 4px; }
+.help-modal-scroll::-webkit-scrollbar-track { background: transparent; }
+.help-modal-scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(126, 207, 255, 0.2);
+}
+
+/* ══════════════════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════════════════ */
+.help-modal-header {
+  margin-bottom: 24px;
+  text-align: center;
+  padding-right: 32px; /* espacio para el X */
+}
+.help-modal-header h2 {
+  margin: 0 0 10px;
+  font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: #ffffff;
+  text-shadow: 0 2px 20px rgba(0, 234, 255, 0.35), 0 1px 0 rgba(0,0,0,0.5);
+}
+.help-modal-header p {
+  margin: 0;
+  font-size: 0.93rem;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.80);
+}
+
+/* ══════════════════════════════════════════════════════
+   IMAGEN HERO
+══════════════════════════════════════════════════════ */
+.help-modal-hero {
+  margin-bottom: 20px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+.help-modal-hero img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* ══════════════════════════════════════════════════════
+   SECCIONES — glass igual que cards del dashboard
+══════════════════════════════════════════════════════ */
+.help-section {
+  margin-bottom: 12px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  transition: background 0.2s, border-color 0.2s;
+}
+.help-section:hover {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.13);
+}
+.help-section h3 {
+  margin: 0 0 8px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #7ecfff;
+  text-shadow: 0 0 12px rgba(126, 207, 255, 0.4);
+}
+.help-section p,
+.help-section li {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.92);
+}
+.help-section strong {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.help-section p + p {
+  margin-top: 6px;
+}
+.help-section ul {
+  margin: 0;
+  padding-left: 18px;
+}
+.help-section li + li {
+  margin-top: 5px;
+}
+
+/* Variante tip — acento cyan */
+.help-tip {
+  background: rgba(0, 234, 255, 0.04);
+  border-color: rgba(0, 234, 255, 0.12);
+}
+.help-tip:hover {
+  background: rgba(0, 234, 255, 0.07);
+  border-color: rgba(0, 234, 255, 0.18);
+}
+.help-tip h3 {
+  color: #38bdf8;
+}
+
+/* ══════════════════════════════════════════════════════
+   BOTÓN ENTENDIDO
+══════════════════════════════════════════════════════ */
+.help-modal-understood {
+  flex-shrink: 0;
+  margin: 8px 36px 28px;
+  height: 46px;
+  border: 1px solid rgba(126, 207, 255, 0.22);
+  border-radius: 14px;
+  background: rgba(126, 207, 255, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #e0f7ff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.25s, border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+}
+.help-modal-understood:hover {
+  transform: translateY(-2px);
+  background: rgba(126, 207, 255, 0.16);
+  border-color: rgba(126, 207, 255, 0.38);
+  box-shadow: 0 8px 28px rgba(126, 207, 255, 0.12);
+}
+.help-modal-understood:active {
+  transform: translateY(0);
+}
+
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE — TABLET (≤ 768px)
+══════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .help-modal-overlay    { padding: 16px; }
+  .help-modal-scroll     { padding: 28px 22px 16px; }
+  .help-modal-understood { margin: 8px 22px 22px; height: 44px; }
+  .help-section          { padding: 14px 16px; }
+  .help-modal-header h2  { font-size: 1.45rem; }
+  .help-modal-header p   { font-size: 0.88rem; }
+  .help-modal-close      { top: 12px; right: 12px; width: 34px; height: 34px; }
+}
+
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE — MÓVIL (≤ 480px)
+   El modal aparece como bottom sheet (sube desde abajo)
+══════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .help-modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+  .help-modal-content,
+  .help-modal-content--compact,
+  .help-modal-content--wide {
+    width: 100%;
+    max-height: 92vh;
+    border-radius: 20px 20px 0 0;
+    border-bottom: none;
+  }
+  .help-modal-scroll     { padding: 24px 18px 12px; }
+  .help-modal-understood { margin: 6px 18px 20px; height: 44px; font-size: 0.8rem; }
+  .help-section          { padding: 12px 14px; border-radius: 13px; margin-bottom: 10px; }
+  .help-section h3       { font-size: 0.85rem; margin-bottom: 6px; }
+  .help-section p,
+  .help-section li       { font-size: 0.82rem; line-height: 1.7; }
+  .help-modal-header     { margin-bottom: 16px; padding-right: 36px; }
+  .help-modal-header h2  { font-size: 1.25rem; }
+  .help-modal-header p   { font-size: 0.82rem; }
+  .help-modal-close      { top: 10px; right: 10px; width: 32px; height: 32px; }
+  .help-modal-hero       { border-radius: 12px; margin-bottom: 14px; }
+}
+
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE — MÓVIL PEQUEÑO (≤ 360px)
+══════════════════════════════════════════════════════ */
+@media (max-width: 360px) {
+  .help-modal-scroll     { padding: 20px 14px 10px; }
+  .help-modal-understood { margin: 6px 14px 16px; }
+  .help-section          { padding: 10px 12px; }
+  .help-modal-header h2  { font-size: 1.1rem; }
+}
