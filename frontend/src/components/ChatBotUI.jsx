@@ -291,7 +291,12 @@ function TaisonModel({ isOpen, onToggle, isTypingRef }) {
     else if (actions[ANIMATIONS.wave]) playAnimation(ANIMATIONS.wave, 0.15, 600);
   };
 
-  const handleClick = (e) => { e.stopPropagation(); playBounceAnimation(); onToggle(); };
+  const handleClick = (e) => {
+  e.stopPropagation();
+  if (navigator.vibrate) navigator.vibrate(50);
+  playBounceAnimation();
+  onToggle();
+  };
 
   useFrame((state) => {
     if (!groupRef.current) return;

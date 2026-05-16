@@ -26,6 +26,8 @@
   filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.5));
   flex-shrink: 0;
   position: relative;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
 }
 
 /* ── Tooltip (nube apuntando al perrito) ── */
