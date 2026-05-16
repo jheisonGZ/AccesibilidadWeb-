@@ -186,8 +186,9 @@ function QuestionMark({ visible, isResult, isAvatar , isProgress }) {
       ref={ref}
       style={{
         position: "absolute",
-        top: "-11px",
-        right: "73px",
+        top: "-18px",
+        left: "50%",
+        transform: "translateX(-50%)",
         width: "28px",
         height: "28px",
         borderRadius: "50%",
