@@ -7,67 +7,55 @@ import {
 } from "firebase/firestore";
 import Swal from "sweetalert2";
 import {
-  Wind, Brain, BookOpen, BatteryLow, Zap, CloudRain, Activity,
+  Wind, Brain, BookOpen, BatteryLow, Zap, Activity,
   Heart, AlertTriangle, AlertCircle, ArrowRight, ArrowLeft,
   CheckCircle, Frown, HeartCrack
 } from "lucide-react";
 import "../styles/questionnaire.css";
 import { useAppNavigate } from "../providers/NavigationContext";
 
-/*
- * CUESTIONARIO — 7 preguntas
- * Fuentes: GAD-7 (Spitzer et al., 2006), PHQ-9 (Kroenke et al., 2001),
- *          BDI-II (Beck et al., 1996), HAM-A (Hamilton, 1959)
- */
 const QUESTIONS = [
   {
     id: "q1",
     text: "Me he sentido nervioso/a, ansioso/a o con los nervios de punta.",
     icon: Wind,
     dimension: "ansiedad",
-    fuente: "GAD-7 ítem 1 · Spitzer et al., 2006",
   },
   {
     id: "q2",
     text: "No he podido dejar de preocuparme o controlar mis preocupaciones.",
     icon: Brain,
     dimension: "ansiedad",
-    fuente: "GAD-7 ítem 2 · Spitzer et al., 2006",
   },
   {
     id: "q3",
     text: "Me he sentido triste o con el ánimo muy bajo sin saber bien por qué.",
     icon: Frown,
     dimension: "ansiedad",
-    fuente: "BDI-II ítem 1 · Beck et al., 1996",
   },
   {
     id: "q4",
     text: "Me ha costado concentrarme en mis actividades académicas.",
     icon: BookOpen,
     dimension: "estres",
-    fuente: "GAD-7 ítem 3 / PHQ-9 ítem 7 · Spitzer et al., 2006; Kroenke et al., 2001",
   },
   {
     id: "q5",
     text: "Me he sentido agotado/a o con poca energía durante el día.",
     icon: BatteryLow,
     dimension: "estres",
-    fuente: "PHQ-9 ítem 4 · Kroenke et al., 2001",
   },
   {
     id: "q6",
     text: "He tenido síntomas físicos como palpitaciones, sudoración o sensación de ahogo al estresarme.",
     icon: Zap,
     dimension: "ansiedad",
-    fuente: "HAM-A ítem 13 · Hamilton, 1959",
   },
   {
     id: "q7",
     text: "He tenido pensamientos negativos sobre mi futuro o he sentido que no soy suficientemente capaz.",
     icon: HeartCrack,
     dimension: "estres",
-    fuente: "BDI-II ítems 3 & 5 · Beck et al., 1996",
   },
 ];
 
@@ -78,20 +66,14 @@ const OPTIONS = [
   { value: 3, label: "Casi siempre",    sublabel: "La mayoría de días" },
 ];
 
-/*
- * Paleta de 7 colores — uno por pregunta
- * Transición suave de azul → cyan → teal → verde → amarillo → naranja → violeta
- * Se aplica como CSS variable --q-accent directamente en el style del contenedor.
- * Todos los elementos de acento (barra, ícono, círculo, badge, dots) leen esa variable.
- */
 const STEP_COLORS = [
-  "#7ecfff", // p1 — azul claro
-  "#60c8f0", // p2 — azul cyan
-  "#4dc9c9", // p3 — teal
-  "#5dd68a", // p4 — verde
-  "#f0c14b", // p5 — amarillo dorado
-  "#f09050", // p6 — naranja
-  "#c084fc", // p7 — violeta
+  "#7ecfff",
+  "#60c8f0",
+  "#4dc9c9",
+  "#5dd68a",
+  "#f0c14b",
+  "#f09050",
+  "#c084fc",
 ];
 
 const MAX_SCORE = QUESTIONS.length * 3; // 21
@@ -115,7 +97,40 @@ const calcDimensionScores = (answers) => {
 };
 
 const lineFillPercent = (val) => val === null ? 0 : Math.round((val / 3) * 100);
+// ── Sonidos Web Audio API ──────────────────────────────────────────
+const playSound = (type) => {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const master = ctx.createGain();
+    master.gain.value = 0.3;
+    master.connect(ctx.destination);
 
+    const tone = (freq, start, duration, vol = 0.3) => {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.connect(g); g.connect(master);
+      o.type = "sine";
+      o.frequency.value = freq;
+      g.gain.setValueAtTime(vol, ctx.currentTime + start);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + duration);
+      o.start(ctx.currentTime + start);
+      o.stop(ctx.currentTime + start + duration);
+    };
+
+    if (type === "select") {
+      tone(520, 0, 0.12);
+    } else if (type === "advance") {
+      tone(440, 0, 0.08);
+      tone(560, 0.09, 0.1);
+    } else if (type === "finish") {
+      tone(440, 0,    0.1);
+      tone(554, 0.12, 0.1);
+      tone(660, 0.24, 0.2);
+    }
+
+    setTimeout(() => ctx.close(), 1000);
+  } catch (_) {}
+};
 export default function Questionnaire() {
   const rawNavigate = useNavigate();
   const navigate    = useAppNavigate();
@@ -135,19 +150,30 @@ export default function Questionnaire() {
   const result   = useMemo(() => classify(score), [score]);
   const progress = (step / QUESTIONS.length) * 100;
 
-  const current   = QUESTIONS[step];
-  const Icon      = current?.icon;
+  const current     = QUESTIONS[step];
+  const Icon        = current?.icon;
   const accentColor = STEP_COLORS[step] ?? STEP_COLORS[0];
 
   const handleSelect = (value) => {
-    const next = [...answers];
-    next[step] = value;
-    setAnswers(next);
-    setTimeout(() => {
-      if (step < QUESTIONS.length - 1) setStep(s => s + 1);
-      else setDone(true);
-    }, 320);
-  };
+  const next = [...answers];
+  next[step] = value;
+  setAnswers(next);
+
+  playSound("select");
+  if (navigator.vibrate) navigator.vibrate(40);
+
+  setTimeout(() => {
+    if (step < QUESTIONS.length - 1) {
+      playSound("advance");
+      if (navigator.vibrate) navigator.vibrate([30, 30, 30]);
+      setStep(s => s + 1);
+    } else {
+      playSound("finish");
+      if (navigator.vibrate) navigator.vibrate([50, 30, 50, 30, 100]);
+      setDone(true);
+    }
+  }, 320);
+};
 
   const handleBack = () => {
     if (done) { setDone(false); return; }
@@ -166,7 +192,6 @@ export default function Questionnaire() {
         id: q.id, pregunta: q.text, dimension: q.dimension,
         valor: answers[i] ?? 0,
         etiqueta: OPTIONS[answers[i] ?? 0]?.label ?? "Nunca",
-        fuente: q.fuente,
       }));
 
       let puntaje_anterior = null;
@@ -310,7 +335,6 @@ export default function Questionnaire() {
 
   /* ══ PANTALLA PREGUNTA ══ */
   return (
-    /* --q-accent cambia en cada paso → todos los elementos de color lo leen */
     <div className="q-page" style={{ "--q-accent": accentColor }}>
       <div className="q-container">
 
@@ -329,17 +353,13 @@ export default function Questionnaire() {
           </div>
 
           <p className="q-card-question">{current.text}</p>
-          <span className="q-source-badge">{current.fuente}</span>
           <p className="q-card-hint">¿Con qué frecuencia en los últimos 7 días?</p>
 
           <div className="q-scale-wrapper">
             <div className="q-scale-row">
-              {/* línea — primer elemento del DOM, queda debajo */}
               <div className="q-scale-line">
                 <div className="q-scale-line-fill" style={{ width: `${lineFillPercent(answers[step])}%` }} />
               </div>
-
-              {/* opciones — z-index:1 en CSS, tapan la línea */}
               {OPTIONS.map((opt) => (
                 <button
                   key={opt.value}
