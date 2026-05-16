@@ -197,10 +197,11 @@ body {
   
   /* Ajuste de imagen para móvil - punto focal optimizado */
   .login-page::before {
-    background-position: 50% 35%;
-    background-size: cover;
+  background-position: 500% 500%;
+  background-size: cover;
+  background-attachment: scroll; /* ← evita scroll parallax en iOS */
+  transform: scale(1);           /* ← resetea cualquier zoom heredado */
   }
-
   .wrapper {
     padding: 22px 18px;
     border-radius: 14px;
@@ -225,9 +226,10 @@ body {
 
   /* Video ajustado para portrait sin bordes blancos */
   .login-bg-video {
-    object-position: center center;
-    transform: scale(1.15);
-  }
+  object-fit: cover;
+  object-position: 40% center;
+  transform: scale(1);
+}
 
   /* OPCIONAL: Oculta el video en móvil (descomenta si quieres ahorrar datos) */
   /*
