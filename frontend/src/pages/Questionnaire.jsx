@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../services/firebase";
 import {
@@ -124,6 +124,12 @@ export default function Questionnaire() {
   const [answers, setAnswers] = useState(Array(QUESTIONS.length).fill(null));
   const [saving,  setSaving]  = useState(false);
   const [done,    setDone]    = useState(false);
+
+  // Sincroniza estado resultado para ChatBotUI
+  useEffect(() => {
+    localStorage.setItem("q_done", done ? "1" : "0");
+    return () => localStorage.removeItem("q_done");
+  }, [done]);
 
   const score    = useMemo(() => answers.reduce((a, b) => a + (b ?? 0), 0), [answers]);
   const result   = useMemo(() => classify(score), [score]);
@@ -261,15 +267,32 @@ export default function Questionnaire() {
           <div className="q-answers-summary">
             {QUESTIONS.map((q, i) => {
               const Q   = q.icon;
-              const opt = OPTIONS[answers[i]];
+              const opt = OPTIONS[answers[i] ?? 0] ?? OPTIONS[0];
               return (
                 <div className="q-summary-row" key={i}>
                   <Q size={16} style={{ color: "#7ecfff", flexShrink: 0 }} />
                   <span className="q-summary-q">{q.text}</span>
-                  <span className="q-summary-a" style={{ color }}>{opt?.label}</span>
+                  <span className="q-summary-a" style={{ color }}>{opt?.label ?? "Sin respuesta"}</span>
                 </div>
               );
             })}
+          </div>
+
+          {/* ── Taison Insight ── */}
+          <div className="q-taison-insight" style={{ borderColor: color + "44" }}>
+            <div className="q-taison-bubble" style={{ borderColor: color + "55" }}>
+              <span className="q-taison-name" style={{ color }}>🐾 Taison dice:</span>
+              <p className="q-taison-text">
+                {result.key === "neutro" &&
+                  "¡Woof! Tu estado emocional se ve estable. Sigue cuidando tus habitos de descanso y pausas activas cada 45 minutos durante el estudio. ¡Vas muy bien!"}
+                {result.key === "leve" &&
+                  "Woof, noto que has tenido momentos dificiles. Esta bien no estar al 100%. Te recomiendo la tecnica Pomodoro (25 min trabajo, 5 descanso) y escribir 5 minutos al dia sobre como te sientes."}
+                {result.key === "estres" &&
+                  "Woof... estas cargando bastante. Prueba la respiracion 4-7-8: inhala 4 segundos, sostiene 7, exhala 8. Tambien la Matriz Eisenhower te ayuda a priorizar sin agobiarte. No tienes que resolver todo hoy."}
+                {result.key === "ansiedad" &&
+                  "Woof, gracias por completar esto. Lo que sientes es valido y merece atencion. Te invito a acercarte a Bienestar UV (edificio 304, ext. 2551/2552). No estas solo/a. Cuando quieras hablar, aqui estoy."}
+              </p>
+            </div>
           </div>
 
           <div className="q-result-actions">

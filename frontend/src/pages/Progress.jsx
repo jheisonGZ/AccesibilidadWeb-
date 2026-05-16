@@ -58,6 +58,30 @@ export default function Progress() {
     return acc;
   }, {});
 
+  // ── Contexto IA progreso ─────────────────────────────────────────────
+useEffect(() => {
+  if (!total) return;
+
+  const progressContext = {
+    totalEvaluaciones: total,
+    promedio: avgScore,
+    ultimoEstado: latest?.classification || "neutro",
+    mejorResultado: best?.score || 0,
+
+    distribucion: {
+      neutro: counts.neutro || 0,
+      leve: counts.leve || 0,
+      estres: counts.estres || 0,
+      ansiedad: counts.ansiedad || 0,
+    },
+  };
+
+  localStorage.setItem(
+    "taison_progress_context",
+    JSON.stringify(progressContext)
+  );
+}, [total, avgScore, latest, best, counts]);
+
   return (
     <div className="pr-page">
       <div className="pr-container">
