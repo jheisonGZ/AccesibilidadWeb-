@@ -13,6 +13,8 @@
   gap: 8px;
   pointer-events: all;
   max-height: calc(100vh - 32px);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 /* ── Canvas 3D ── */
@@ -54,22 +56,21 @@
   width: 330px;
   height: 460px;
   background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 18px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   pointer-events: all;
-  /* ── FIX producción: activa contexto de composición para backdrop-filter ── */
   isolation: isolate;
   will-change: transform, opacity;
+  transform: translateZ(0);
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.4),
     0 0 0 1px rgba(255, 255, 255, 0.04) inset;
   opacity: 0;
-  transform: translateY(20px) scale(0.96);
   transform-origin: bottom right;
   flex-shrink: 1;
 }
