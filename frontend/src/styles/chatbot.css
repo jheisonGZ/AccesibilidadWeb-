@@ -25,10 +25,12 @@
   pointer-events: all;
   filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.5));
   flex-shrink: 0;
+  position: relative;
 }
 
-/* ── Tooltip ── */
+/* ── Tooltip (nube apuntando al perrito) ── */
 .chatbot-tooltip {
+  position: relative;
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -46,6 +48,31 @@
   transform: translateY(8px);
   transition: border-color 0.2s;
   flex-shrink: 0;
+}
+/* Borde del triángulo */
+.chatbot-tooltip::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  right: 22px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid rgba(255, 255, 255, 0.15);
+}
+/* Relleno del triángulo */
+.chatbot-tooltip::before {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  right: 23px;
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 7px solid rgba(15, 15, 25, 0.75);
+  z-index: 1;
 }
 .chatbot-tooltip:hover {
   border-color: rgba(126, 207, 255, 0.35);
@@ -270,10 +297,7 @@
     align-self: flex-end;
   }
   .chatbot-tooltip {
-    font-size: 10.5px;
-    padding: 5px 12px;
-    border-radius: 16px;
-    display: none;        /* ← agrega esta línea */
+    display: none;
   }
   .chatbot-panel {
     width: 100%;
