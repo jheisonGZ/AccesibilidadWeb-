@@ -2,30 +2,27 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../providers/AuthProvider";
 import Swal from "sweetalert2";
+import { useFeedback } from "../hooks/useFeedback";
 import "../styles/login.css";
 
 export default function Login() {
   const { login, loginWithGoogle, user } = useAuth();
   const navigate = useNavigate();
+  const fb = useFeedback();
 
-  const [email, setEmail]         = useState("");
-  const [password, setPassword]   = useState("");
-  const [busy, setBusy]           = useState(false);
-  const [cinematic, setCinematic] = useState(false);
+  const [email, setEmail]           = useState("");
+  const [password, setPassword]     = useState("");
+  const [busy, setBusy]             = useState(false);
+  const [cinematic, setCinematic]   = useState(false);
   const [videoReady, setVideoReady] = useState(false);
 
   const videoRef = useRef(null);
 
-  // Carga el video solo después de que la página se montó
-  // usando src dinámico en lugar de import estático
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
-
-    // Carga diferida — el video NO bloquea el render inicial
     v.src = "/video/login.mp4";
     v.load();
-
     const onReady = () => setVideoReady(true);
     v.addEventListener("canplaythrough", onReady);
     return () => v.removeEventListener("canplaythrough", onReady);
@@ -33,16 +30,11 @@ export default function Login() {
 
   const playCinematic = () => {
     const v = videoRef.current;
-    if (!v || !videoReady) {
-      // Si el video no cargó todavía, navega directo sin esperar
-      navigate("/home");
-      return;
-    }
+    if (!v || !videoReady) { navigate("/home"); return; }
     setCinematic(true);
     v.currentTime = 0;
-    v.play().catch(() => navigate("/home")); // fallback si autoplay está bloqueado
+    v.play().catch(() => navigate("/home"));
     v.onended = () => navigate("/home");
-    // Timeout de seguridad: si el video tarda más de 5s, navega igual
     setTimeout(() => navigate("/home"), 5000);
   };
 
@@ -52,6 +44,7 @@ export default function Login() {
     const msg = await login(email, password);
     setBusy(false);
     if (msg) {
+      fb.loginError();
       Swal.fire({
         icon: "error",
         title: "Error al iniciar sesión",
@@ -63,6 +56,7 @@ export default function Login() {
         color: "#2a3a22",
       });
     } else {
+      fb.loginSuccess();
       playCinematic();
     }
   };
@@ -71,6 +65,7 @@ export default function Login() {
     setBusy(true);
     try {
       await loginWithGoogle();
+      fb.loginSuccess();
       await Swal.fire({
         icon: "success",
         title: "¡Bienvenido!",
@@ -85,6 +80,7 @@ export default function Login() {
       });
       playCinematic();
     } catch {
+      fb.loginError();
       Swal.fire({
         icon: "error",
         title: "Error con Google",
@@ -102,7 +98,6 @@ export default function Login() {
 
   return (
     <div className="login-page">
-      {/* VIDEO — sin autoPlay, sin preload eager, carga diferida */}
       <video
         ref={videoRef}
         className={`login-bg-video ${cinematic ? "video-animate" : ""}`}
@@ -110,13 +105,10 @@ export default function Login() {
         playsInline
         preload="auto"
       />
-
       <div className={`login-bg-overlay ${cinematic ? "overlay-dark" : ""}`} />
-
       <div className={`wrapper ${cinematic ? "wrapper-fade" : ""}`}>
         <form onSubmit={handleLogin}>
           <h1>Iniciar sesión</h1>
-
           <div className="input-box">
             <input
               type="email"
@@ -127,7 +119,6 @@ export default function Login() {
               autoComplete="email"
             />
           </div>
-
           <div className="input-box">
             <input
               type="password"
@@ -138,31 +129,21 @@ export default function Login() {
               autoComplete="current-password"
             />
           </div>
-
           <div className="remember-forgot">
             <Link to="/reset-password">¿Olvidaste tu contraseña?</Link>
           </div>
-
           <button className="btn" type="submit" disabled={busy}>
             {busy ? "Cargando..." : "Iniciar sesión"}
           </button>
-
-          <button
-            className="btn btn-google"
-            type="button"
-            onClick={handleGoogle}
-            disabled={busy}
-          >
+          <button className="btn btn-google" type="button" onClick={handleGoogle} disabled={busy}>
             Iniciar sesión con Google
           </button>
-
           <div className="register-link">
             <p>
               ¿No tienes una cuenta?{" "}
               <Link to="/register">Regístrate ahora</Link>
             </p>
           </div>
-
           {user && <p className="login-mini">Sesión: {user.email}</p>}
         </form>
       </div>

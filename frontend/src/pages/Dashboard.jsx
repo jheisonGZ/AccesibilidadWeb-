@@ -1,30 +1,32 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/dashboard.css";
 import Swal from "sweetalert2";
 import { ClipboardList, User, Globe, BarChart3 } from "lucide-react";
 import { useAuth } from "../providers/AuthProvider";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
+import { useFeedback } from "../hooks/useFeedback";
 
 export default function Dashboard() {
   const { alias, user } = useAuth();
-  const [questionnaireCompleted, setQuestionnaireCompleted] = useState(false);
-  const [avatarSelected, setAvatarSelected] = useState(false);
-  const [loadingState, setLoadingState] = useState(true);
-  const [backgroundLoaded, setBackgroundLoaded] = useState(false); // ← Nuevo
+  const navigate = useNavigate();
+  const fb = useFeedback();
 
-  // Precargar la imagen de fondo
+  const [questionnaireCompleted, setQuestionnaireCompleted] = useState(false);
+  const [avatarSelected, setAvatarSelected]                 = useState(false);
+  const [loadingState, setLoadingState]                     = useState(true);
+  const [backgroundLoaded, setBackgroundLoaded]             = useState(false);
+
   useEffect(() => {
     const img = new Image();
     img.src = "/images/dashboard.webp";
     img.onload = () => {
       setBackgroundLoaded(true);
-      document.querySelector('.dashboard-page')?.classList.add('loaded');
+      document.querySelector(".dashboard-page")?.classList.add("loaded");
     };
   }, []);
 
-  // Leer estado real del usuario desde Firestore
   useEffect(() => {
     if (!user) return;
     const fetchState = async () => {
@@ -44,18 +46,13 @@ export default function Dashboard() {
     fetchState();
   }, [user]);
 
-  // Mostrar skeleton mientras carga la imagen
   if (!backgroundLoaded || loadingState) {
     return (
       <div className="dashboard-page">
         <div className="dashboard-loading"></div>
-        <div className="dashboard-container" style={{ 
-          display: "flex", 
-          alignItems: "center", 
-          justifyContent: "center", 
-          minHeight: "60vh",
-          position: "relative",
-          zIndex: 1
+        <div className="dashboard-container" style={{
+          display: "flex", alignItems: "center", justifyContent: "center",
+          minHeight: "60vh", position: "relative", zIndex: 1,
         }}>
           <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "16px" }}>
             Cargando tu espacio...
@@ -65,8 +62,8 @@ export default function Dashboard() {
     );
   }
 
-  // El resto de tu componente Dashboard sigue igual...
   const showQuestionnaireReminder = () => {
+    fb.error();
     Swal.fire({
       icon: "warning",
       title: "Debes completar el cuestionario",
@@ -79,6 +76,7 @@ export default function Dashboard() {
   };
 
   const showAvatarReminder = () => {
+    fb.error();
     Swal.fire({
       icon: "info",
       title: "Selecciona un avatar",
@@ -91,6 +89,7 @@ export default function Dashboard() {
   };
 
   const confirmChangeAvatar = async () => {
+    fb.cardClick();
     const result = await Swal.fire({
       icon: "question",
       title: "¿Cambiar avatar?",
@@ -111,7 +110,6 @@ export default function Dashboard() {
     <div className="dashboard-page">
       <div className="dashboard-container">
 
-        {/* BIENVENIDA */}
         <div className="dashboard-welcome">
           <div className="dashboard-avatar">
             {user?.photoURL
@@ -125,7 +123,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* TÍTULO */}
         <div className="dashboard-header-text">
           <h1 className="dashboard-title">Tu espacio de bienestar emocional</h1>
           <p className="dashboard-subtitle">
@@ -133,11 +130,10 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* TARJETAS */}
         <div className="dashboard-grid">
 
           {/* 1. Cuestionario */}
-          <Link to="/home/questionnaire" className="dashboard-card">
+          <Link to="/home/questionnaire" className="dashboard-card" onClick={() => fb.cardClick()}>
             <ClipboardList size={28} />
             <h3>{questionnaireCompleted ? "Repetir cuestionario" : "Hacer cuestionario"}</h3>
             <p>{questionnaireCompleted ? "Vuelve a hacer el test" : "Completa el test de accesibilidad"}</p>
@@ -159,7 +155,7 @@ export default function Dashboard() {
                 <p>¿Quieres elegir otro?</p>
               </div>
             ) : (
-              <Link to="/home/avatar" className="dashboard-card">
+              <Link to="/home/avatar" className="dashboard-card" onClick={() => fb.cardClick()}>
                 <User size={28} />
                 <h3>Elegir avatar</h3>
                 <p>Selecciona tu representación</p>
@@ -175,7 +171,7 @@ export default function Dashboard() {
 
           {/* 3. Escenario 3D */}
           {avatarSelected ? (
-            <Link to="/home/scene" className="dashboard-card">
+            <Link to="/home/scene" className="dashboard-card" onClick={() => fb.cardClick()}>
               <Globe size={28} />
               <h3>Escenario 3D</h3>
               <p>Explora el entorno interactivo</p>
@@ -189,7 +185,7 @@ export default function Dashboard() {
           )}
 
           {/* 4. Progreso */}
-          <Link to="/home/progress" className="dashboard-card">
+          <Link to="/home/progress" className="dashboard-card" onClick={() => fb.cardClick()}>
             <BarChart3 size={28} />
             <h3>Ver progreso</h3>
             <p>Consulta tus resultados</p>
