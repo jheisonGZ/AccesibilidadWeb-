@@ -1,8 +1,8 @@
-# Aplicación Web Interactiva con Principios de Accesibilidad para apoyar el Bienestar Emocional de Estudiantes Universitarios  
+<div align="center">
 
-<img width="1536" height="1024" alt="Aplicación Web de Bienestar Emocional" src="https://github.com/user-attachments/assets/a6498ee8-1307-4d0c-88ce-39b6183122d1" />
+# Aplicación Web Interactiva con Principios de Accesibilidad para apoyar el Bienestar Emocional de Estudiantes Universitarios
 
----
+</div>
 
 # Descripción General
 
