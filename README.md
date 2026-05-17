@@ -3,6 +3,7 @@
 # Aplicación Web Interactiva con Principios de Accesibilidad para apoyar el Bienestar Emocional de Estudiantes Universitarios
 
 </div>
+<img width="1536" height="1024" alt="ChatGPT Image 15 may 2026, 06_47_48 p m" src="https://github.com/user-attachments/assets/2b9e4ce3-3bab-4bec-8052-0217429a07e2" />
 
 # Descripción General
 
